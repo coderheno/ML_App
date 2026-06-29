@@ -1,24 +1,23 @@
 import streamlit as st
 import joblib
 
-# Load model
-model = joblib.load("loan_model.pkl")
+st.title("Health Risk Predictor")
 
-st.title("Loan Approval Prediction")
+# Load pre-trained model
+model = joblib.load("health_model.pkl")
 
-age = st.number_input("Enter Age", min_value=18, max_value=100)
+age = st.number_input("Enter Age", min_value=1, max_value=100)
+bmi = st.number_input("Enter BMI", min_value=10.0, max_value=50.0)
+bp = st.number_input("Enter Blood Pressure", min_value=60, max_value=200)
 
-income = st.number_input("Enter Annual Income", min_value=0)
+if st.button("Check Risk"):
 
-loan = st.number_input("Enter Loan Amount", min_value=0)
-
-if st.button("Predict"):
-
-    input_data = [[age, income, loan]]
+    input_data = [[age, bmi, bp]]
 
     prediction = model.predict(input_data)
 
     if prediction[0] == 1:
-        st.success("Loan Approved")
+        st.warning("High Risk - Please consult a doctor.")
     else:
-        st.error("Loan Not Approved")
+        st.success("Low Risk - Maintain your current lifestyle.")
+        
